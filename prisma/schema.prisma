@@ -9,3 +9,88 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String?   @unique
+  emailVerified   DateTime?
+  image           String?
+  hashedPassword  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  favoriteCarIds  String[] @db.ObjectId
+
+  accounts Account[]
+  cars Car[]
+  reviews CarReview[]
+}
+
+model Account {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.String
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Car {
+  id                  String @id @default(auto()) @map("_id") @db.ObjectId
+  userId              String @db.ObjectId
+  make                String
+  model               String
+  price               Int
+  mileage             Float
+  year                Int
+  location            String
+  description         String
+  color               String
+  fuel                String
+  transmission        String
+  status              String
+  engine              String
+  searchable          String
+  whatsapp            String
+  contact             String
+  allowWhatsapp       Boolean
+  allowContact        Boolean
+  recommended         Boolean
+  imgCount            Int
+  watchListCounter    Int
+  createdAt           DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images Image[]
+  reviews CarReview[]
+}
+
+model CarReview {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  carId String @db.ObjectId
+  userId String @db.ObjectId
+  description String
+  createdAt DateTime @default(now())
+
+  car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Image {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  carId String @db.ObjectId
+  imageSrc String
+  createdAt DateTime @default(now())
+
+  car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
