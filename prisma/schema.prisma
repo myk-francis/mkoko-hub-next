@@ -54,6 +54,7 @@ model Car {
   mileage             Float
   year                Int
   location            String
+  region              String
   description         String
   color               String
   fuel                String
@@ -68,10 +69,10 @@ model Car {
   recommended         Boolean
   imgCount            Int
   watchListCounter    Int
+  imageSrc            String
   createdAt           DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  images Image[]
   reviews CarReview[]
 }
 
@@ -86,11 +87,3 @@ model CarReview {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Image {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  carId String @db.ObjectId
-  imageSrc String
-  createdAt DateTime @default(now())
-
-  car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
-}

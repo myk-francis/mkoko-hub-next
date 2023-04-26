@@ -5,8 +5,8 @@ import "./globals.css";
 import { Nunito } from "next/font/google";
 import ToasterProvider from "./providers/ToasterProvider";
 import LoginModal from "./components/models/LoginModal";
-import getCurrentUser from "./actions/getCurrenUser";
-import RentModal from "./components/models/RentModal";
+import getCurrentUser from "./actions/getCurrentUser";
+import CarModal from "./components/models/CarModal";
 
 export const metadata = {
   title: "Mkoko Hub",
@@ -30,11 +30,11 @@ export default async function RootLayout({
         <ClientOnly>
           <ToasterProvider />
           <LoginModal />
-          <RentModal />
+          <CarModal />
           <RegisterModal />
           <Navbar currentUser={currentUser} />
         </ClientOnly>
-        {children}
+        <div className="pb-20 pt-28">{children}</div>
       </body>
     </html>
   );
